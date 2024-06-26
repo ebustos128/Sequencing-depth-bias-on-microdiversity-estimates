@@ -99,9 +99,15 @@ BedGraph.tad.rb -i filter95.Long.Fragmented.MG1.bam.bg -r 0.8 -s > TAD80.filter9
 inStrain profile filter95.Long.Fragmented.MG1.sam MAG1.fasta -o IS_MAG1_Long.Fragmented.MG1 --pairing_filter non_discordant --skip_mm_profiling
 ```
 
+## Average Nucleotide Identity of reads (ANIr)
+
+```
+anir.rb -g MAG1.fasta -m filter95.Long.Fragmented.MG1.sam --m-format sam -a fix --tab ANIr_MAG1_Long.Fragmented.MG1.tsv
+```
+
 ## Prepare inputs for calculate rarefaction curves of nucleotide diversity and sequencing depth
 
-The inputs for the R script are two tables with the nucleotide diversity values and sequencing depth for each species across metagenomes (see example tables)
+The inputs for the R script are two tables with the nucleotide diversity or ANIr values and sequencing depth for each species across metagenomes (see example tables)
 
 ```
 library(R6)
