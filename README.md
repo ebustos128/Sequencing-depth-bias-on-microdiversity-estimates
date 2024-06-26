@@ -1,4 +1,4 @@
-# Sequencing-depth-bias-on-microdiversity-estimates
+# Sequencing depth bias on microdiversity estimates
 
 Estimation of sequencing depth influence on microdiversity estimates
 
