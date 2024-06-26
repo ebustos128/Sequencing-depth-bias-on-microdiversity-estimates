@@ -358,3 +358,4 @@ print(predicted_values)
 
 ## Example of rarefaction curve graph:
 
+![figure](Example.Rarefaction.pdf)
