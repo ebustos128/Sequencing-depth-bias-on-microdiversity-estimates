@@ -103,10 +103,10 @@ inStrain profile filter95.Long.Fragmented.MG1.sam MAG1.fasta -o IS_MAG1_Long.Fra
 
 Desired outputs are in: IS_MAG1_Long.Fragmented.MG1/output/IS_MAG1_Long.Fragmented.MG1_genome_info.tsv
 
-genome/MAG name: Column 1
-coverage: Column 2
-nucl_diversity (pi): Column 4
-nucl_diversity_rarefied (pi rarefied at 200X): Column 13
+genome/MAG name: Column 1; 
+coverage: Column 2; 
+nucl_diversity (pi): Column 4; 
+nucl_diversity_rarefied (pi rarefied at 200X): Column 13; 
 reads_mean_PID (ANIr): Column 28
 
 
