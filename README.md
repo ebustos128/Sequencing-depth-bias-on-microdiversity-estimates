@@ -27,7 +27,7 @@ pip install .
 6) Samtools can be downloaded from https://github.com/samtools/samtools
 
 
-## Illumina metagenomic trimming
+## Illumina metagenomic trimming (not needed for Long-reads)
 
 ```
 bbduk.sh in1=Short.MG1.R1.fastq in2=Short.MG1.R2.fastq out1=Short.MG1.trimmed.R1.fastq out2=Short.MG1.trimmed.R2.fastq ref=adapters.fa ktrim=r k=28 mink=12 hdist=1 tbo=t tpe=t qtrim=rl trimq=20 minlength=100
@@ -71,43 +71,48 @@ FastA.subsample.pl -f 1,5,10,20,30,40,50,60,70,80,90 Long.MG1.fasta
 shred.sh in=Long.MG1.fasta.10.0000-1.fa out=Long.Fragmented.MG1.fasta.10.0000-1.fa length=200 minlength=0
 ```
 
-## Mapping with Bowtie2 (example with long-reads)
+## Mapping with Bowtie2 (example with short-reads and 10% of reads)
 
 ```
 cat MAGs* > CAT.ALL.MAGs.fasta
 
 bowtie2-build CAT.ALL.MAGs.fasta CAT.ALL.MAGs.db
 
-bowtie2 --reorder --no-unal -f -p 36 -x CAT.ALL.MAGs.db -U Long.Fragmented.MG1.fasta.10.0000-1.fa > Long.Fragmented.MG1.sam
+bowtie2 --reorder --no-unal -f -p 36 -x CAT.ALL.MAGs.db -1 Short.MG1.R1.fasta.10.0000-1.fa -2 Short.MG1.R2.fasta.10.0000-1.fa > Short.MG1.10.sam
+
+sam.filter.rb -m Short.MG1.10.sam -o filter95_Short.MG1.10.sam -t 16
 ```
 
-## Filtering reads to 95% identity and TAD80 estimation
+## Mapping with Bowtie2 (example with long-reads and 10% of reads)
 
 ```
-sam.filter.rb -m Long.Fragmented.MG1.sam -o filter95.Long.Fragmented.MG1.sam
+cat MAGs* > CAT.ALL.MAGs.fasta
 
-samtools view -b filter95.Long.Fragmented.MG1.sam | samtools sort -l 9 -@ 36 -o filter95.Long.Fragmented.MG1.bam
+bowtie2-build CAT.ALL.MAGs.fasta CAT.ALL.MAGs.db
 
-bedtools genomecov -ibam filter95.Long.Fragmented.MG1.bam -bga > filter95.Long.Fragmented.MG1.bam.bg
+bowtie2 --reorder --no-unal -f -p 36 -x CAT.ALL.MAGs.db -U Long.Fragmented.MG1.fasta.10.0000-1.fa > Long.Fragmented.MG1.10.sam
 
-BedGraph.tad.rb -i filter95.Long.Fragmented.MG1.bam.bg -r 0.8 -s > TAD80.filter95.Long.Fragmented.MG1.txt
+sam.filter.rb -m Long.Fragmented.MG1.10.sam -o filter95_Long.Fragmented.MG1.10.sam -t 16
 ```
 
-## Nucleotide diversity quantification using inStrain
+## Nucleotide diversity (pi), rarefied nucleotide diversity at 200X, and Average Nucleotide Identity of reads (ANIr) quantification using inStrain
 
 ```
-inStrain profile filter95.Long.Fragmented.MG1.sam MAG1.fasta -o IS_MAG1_Long.Fragmented.MG1 --pairing_filter non_discordant --skip_mm_profiling
+inStrain profile filter95.Long.Fragmented.MG1.sam MAG1.fasta -o IS_MAG1_Long.Fragmented.MG1 --pairing_filter non_discordant --skip_mm_profiling --rarefied_coverage 200 --skip_plot_generation
 ```
 
-## Average Nucleotide Identity of reads (ANIr)
+Desired outputs are in: IS_MAG1_Long.Fragmented.MG1/output/IS_MAG1_Long.Fragmented.MG1_genome_info.tsv
 
-```
-anir.rb -g MAG1.fasta -m filter95.Long.Fragmented.MG1.sam --m-format sam -a fix --tab ANIr_MAG1_Long.Fragmented.MG1.tsv
-```
+genome/MAG name: Column 1
+coverage: Column 2
+nucl_diversity (pi): Column 4
+nucl_diversity_rarefied (pi rarefied at 200X): Column 13
+reads_mean_PID (ANIr): Column 28
+
 
 ## Rarefaction curves and interpolation of nucleotide diversity to a standardized sequencing depth (e.g. 200X)
 
-To generate rarefaction curves and interpolations use the Rarefaction.Interpolation.R script.
+To generate rarefaction curves and interpolations use the Rarefaction.Interpolation.R script with coverage.table.csv and nucleotide.diversity.table.csv/anir.table.csv
 
 
 ## Example of rarefaction curve graph:
@@ -119,3 +124,8 @@ a) Green lines shows increasing diversity with increasing coverage
 b) Red lines shows decreasing diversity with increasing coverage
 
 ![figure](/Example.Rarefaction.svg)
+
+
+## Estimation of average estimated error (%)
+
+To generate average estimated error (%) plots use the Average.Estimated.Error.R script with coverage.table.csv and nucleotide.diversity.table.csv/anir.table.csv
