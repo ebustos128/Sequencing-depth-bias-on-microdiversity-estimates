@@ -129,3 +129,9 @@ b) Red lines shows decreasing diversity with increasing coverage
 ## Estimation of average estimated error (%)
 
 To generate average estimated error (%) plots use the Average.Estimated.Error.R script with coverage.table.csv and nucleotide.diversity.table.csv/anir.table.csv
+
+## Example of rarefaction curve graph:
+
+Estimation of the impact of sequencing depth on the accuracy of nucleotide diversity (π; left panels) and Average Nucleotide Identity (ANIr; right panels) estimates across hypersaline, marine or human gut metagenomes using Illumina, PacBio or Oxford Nanopore (ONT) sequencing platforms. The average absolute error (%) and standard deviation are shown across different levels of sequencing coverage. The error is calculated as the difference between the nucleotide diversity or ANIr for each subsampled fraction of the metagenome (subsample) divided by the nucleotide diversity of the full size (before subsampling) metagenome.
+
+![figure](/Example.Average.Error.svg)
