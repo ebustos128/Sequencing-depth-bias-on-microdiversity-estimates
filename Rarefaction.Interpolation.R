@@ -201,17 +201,13 @@ read.rarefact <- function(file.seq, file.div) {
 
 # Example use:
 # Load data using `read.rarefact`
-rare <- read.rarefact("Seqdeph.Table.csv", "inStrain.Table.csv")
+rare <- read.rarefact("coverage.table.csv", "nucleotide.diversity.table.csv")
 
-# Plot all the data as is
-rare$plot()
-# Modify the plot with custom options
-rare$plot(lwd = 2, plot.opts = list(las = 1))
+# Filter by depth ≥ 5X or ≥ 10X and plot
+rare$filter(5)$plot(lwd = 2, plot.opts = list(las = 1))
+rare$filter(10)$plot(lwd = 2, plot.opts = list(las = 1))
 
-# Filter by depth ≥ 10X and plot
-rare$filter(10)$plot()
-
-# Plot error of different models
+# Plot error of different models using ≥ 10X
 rare.f <- rare$filter(10)
 layout(matrix(3:3, nrow = 3))
 rare.f$plot.error(modelf = "linear")
@@ -223,7 +219,7 @@ rare.f$plot.error(modelf = "log-square")
 rare.f <- rare$filter(10)
 rare.f$modelf <- "log-square"
 
-# Predict the diversity of the first species in the first site at sequencing depth of 200X
+# Predict the nucleotide diversity of the species at sequencing depth of 200X
 
 spp <- rare.f$spp()
 sites <- rare.f$sites()
